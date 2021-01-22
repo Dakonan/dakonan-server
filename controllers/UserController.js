@@ -13,7 +13,7 @@ class UserController {
         winCount: newUser.winCount
       })
     } catch (err) {
-      console.log(err)
+      next(err)
     }
   }
 
@@ -23,7 +23,7 @@ class UserController {
       const user = await User.findOne({ where: { username } })
       
       if (!user) {
-        throw { message: "username or password might be wrong", status: 404 }
+        throw { message: "username or password seems to be wrong", status: 404 }
       } else {
         const isPasswordMatch = checkPassword(password, user.password)
         if (isPasswordMatch) {
@@ -31,11 +31,11 @@ class UserController {
           const access_token = generateToken({ username, email })
           res.status(200).json({ access_token })
         } else {
-          throw { message: "username or password might be wrong", status: 404 }
+          throw { message: "username or password seems to be wrong", status: 404 }
         }
       }
     } catch(err) {
-      console.log(err)
+      next(err)
     }
   }
 }

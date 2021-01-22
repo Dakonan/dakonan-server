@@ -5,7 +5,7 @@ const express = require("express")
 const app = express();
 // const io = require("socket.io")
 const routers = require('./routers')
-
+const { errorHandler } = require('./middlewares')
 
 // let games = [];
 // 
@@ -57,5 +57,5 @@ const routers = require('./routers')
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use('/', routers)
-
+app.use(errorHandler)
 module.exports = app
