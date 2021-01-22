@@ -50,6 +50,4 @@ io.on("connect", (socket) => {
   
 });
 
-server.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
+module.exports = app
