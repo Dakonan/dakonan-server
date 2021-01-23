@@ -2,8 +2,8 @@ if (!process.env.NODE_ENV) {
   require('dotenv').config()
 }
 const express = require("express")
-const app = express();
-
+const app = express()
+const routers = require('./routers/index')
 const { errorHandler } = require('./middlewares')
 
 app.use(express.json())
