@@ -8,8 +8,6 @@ let gameData = [];
 
 let rooms = []
 
-let collectionPlayer = []
-
 io.on("connect", (socket) => {
   io.emit("greeting", "connect");
   socket.on("playerRegistration", function (payload) {
@@ -40,21 +38,9 @@ io.on("connect", (socket) => {
     })
   })
   socket.on('startGame', data => {
-    console.log(data, 'ini isi datanya')
     socket.broadcast.to(data.name).emit('start-game', data)
     // io.in(data.name).emit('startTheGame')
-    // io.emit('collectionPlayer', collectionPlayer)
   })
-
-//   socket.on("newCounter", function (payload) {
-//     if(payload.score == 10){
-//       io.sockets.in(payload.roomName).emit('gameOver', `${payload.players[0]} win`)
-//     } else if(payload.scoreLawan == 10) {
-//       io.sockets.in(payload.roomName).emit('gameOver', 'you lose')
-//     } else {
-//       socket.broadcast.emit("scoreLawan", payload.score);
-//     }
-//   });
   
 });
 
