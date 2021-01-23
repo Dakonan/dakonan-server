@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --runInBand --detectOpenHandles"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,12 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.5.1",
     "sequelize": "^6.4.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "supertest": "^6.1.1"
   }
 }
