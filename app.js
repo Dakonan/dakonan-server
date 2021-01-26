@@ -8,6 +8,7 @@ const routers = require('./routers/index')
 const cors = require('cors');
 
 const { errorHandler } = require('./middlewares')
+const cors = require('cors')
 
 app.use(cors());
 app.use(express.json())

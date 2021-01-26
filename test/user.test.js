@@ -63,7 +63,6 @@ describe('Register User POST /register', () => {
       .send({email: "test@mail.com", password: 'testing', username: 'tester' })
       .end((err, res) => {
         const { body, status} = res
-        // console.log(res.body, 'dari test')
         if(err){
           return done(err)
         }
