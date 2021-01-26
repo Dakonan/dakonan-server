@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 let token = ''
 let UserId
 let accessToken = ''
+let username = ''
 
 const { sequelize } = require('../models')
 const decodeToken = require('../helpers/decodeToken')
@@ -34,6 +35,7 @@ beforeAll(done => {
             email: user[0].email,
             username: user[0].username
         }, 'hiha')
+        username = user[0].username
         // console.log(token, 'di test')
         done()
     })
@@ -307,7 +309,7 @@ describe('Post Win', () => {
     test('Response on Posting Win Match', done => {
       request(app)
       .post('/win')
-      .set({access_token: token})
+      .set({username})
       .end((err, res) => {
         if (err) {
           return done(err)
@@ -326,7 +328,7 @@ describe('Post Lose', () => {
     test('Response on Posting Lose Match', done => {
       request(app)
       .post('/lose')
-      .set({access_token: token})
+      .set({username})
       .end((err, res) => {
         if (err) {
           return done(err)
