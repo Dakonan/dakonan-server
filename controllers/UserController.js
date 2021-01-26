@@ -50,17 +50,18 @@ class UserController {
 
   static async win (req, res, next) {
     try {
-      const { access_token } = req.headers
-      const decodedToken = await decodeToken(access_token, 'hiha')
-      const username = decodedToken.username
+      // const { access_token } = req.headers
+      // const decodedToken = await decodeToken(access_token, 'hiha')
+      // const username = decodedToken.username
+      const { username } = req.headers
       const user = await User.findOne({ where: { username } })
       const id = user.dataValues.id
       const matchCount = user.dataValues.matchCount
       const winCount = user.dataValues.winCount
       // console.log('match:', matchCount, ' win:', winCount)
       const updateUser = {
-        matchCount: matchCount+1,
-        winCount: winCount+1
+        matchCount: (matchCount+(0.5)),
+        winCount: (winCount+(0.5))
       }
       const update = await User.update(updateUser, {
         where: {
@@ -78,15 +79,16 @@ class UserController {
 
   static async lose (req, res, next) {
     try {
-      const { access_token } = req.headers
-      const decodedToken = await decodeToken(access_token, 'hiha')
-      const username = decodedToken.username
+      // const { access_token } = req.headers
+      // const decodedToken = await decodeToken(access_token, 'hiha')
+      // const username = decodedToken.username
+      const { username } = req.headers
       const user = await User.findOne({ where: { username } })
       const id = user.dataValues.id
       const matchCount = user.dataValues.matchCount
       // console.log('match:', matchCount, ' win:', winCount)
       const updateUser = {
-        matchCount: matchCount+1,
+        matchCount: matchCount+0.5,
       }
       const update = await User.update(updateUser, {
         where: {
