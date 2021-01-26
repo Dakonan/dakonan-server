@@ -48,14 +48,12 @@ io.on("connect", (socket) => {
   })
 
   socket.on('leaveRoom', (roomName, username) => {
-    console.log(rooms, 'isi rooms before')
     socket.leave(roomName, () => {
       let roomIndex = rooms.findIndex((i) => i.name == roomName)
       const newRoomUsers = rooms[roomIndex].users.filter(user => {
         return user !== username
       })
       rooms[roomIndex].users = newRoomUsers
-      console.log(rooms, 'isi rooms after')
       io.sockets.in(roomName).emit("roomDetail", rooms[roomIndex])
     })
   })
