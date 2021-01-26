@@ -34,7 +34,6 @@ beforeAll(done => {
             email: user[0].email,
             username: user[0].username
         }, 'hiha')
-        // console.log(token, 'di test')
         done()
     })
     .catch(err => {
@@ -61,7 +60,6 @@ describe('Register User POST /register', () => {
       .send({email: "test@mail.com", password: 'testing', username: 'tester' })
       .end((err, res) => {
         const { body, status} = res
-        // console.log(res.body, 'dari test')
         if(err){
           return done(err)
         }
