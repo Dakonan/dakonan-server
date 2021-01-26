@@ -1,14 +1,14 @@
 {
   "development": {
-    "username": "postgres",
-    "password": 123456,
-    "database": "dakonan_database",
+    "username": "andhika",
+    "password": "12345678",
+    "database": "dakonan_database_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
-    "username": "postgres",
-    "password": 123456,
+    "username": "andhika",
+    "password": "12345678",
     "database": "dakonan_database_test",
     "host": "127.0.0.1",
     "dialect": "postgres"

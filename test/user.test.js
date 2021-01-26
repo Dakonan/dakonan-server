@@ -4,8 +4,10 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 let token = ''
 let UserId
+let accessToken = ''
 
 const { sequelize } = require('../models')
+const decodeToken = require('../helpers/decodeToken')
 const { queryInterface } = sequelize
 
 beforeAll(done => {
@@ -32,7 +34,7 @@ beforeAll(done => {
             email: user[0].email,
             username: user[0].username
         }, 'hiha')
-        console.log(token, 'di test')
+        // console.log(token, 'di test')
         done()
     })
     .catch(err => {
@@ -59,7 +61,7 @@ describe('Register User POST /register', () => {
       .send({email: "test@mail.com", password: 'testing', username: 'tester' })
       .end((err, res) => {
         const { body, status} = res
-        console.log(res.body, 'dari test')
+        // console.log(res.body, 'dari test')
         if(err){
           return done(err)
         }
@@ -71,7 +73,7 @@ describe('Register User POST /register', () => {
     })
   }),
   describe('Register Error', () => {
-    test('cant create user coz email has been used', done => {
+    test('cant create user because email has been used', done => {
       request(app)
       .post('/register')
       .send({email: "test@mail.com", password: '123456', username: 'admin1' })
@@ -87,7 +89,7 @@ describe('Register User POST /register', () => {
     })
   }),
   describe('Register Error', () => {
-    test('cant create user coz password length < 6', done => {
+    test('cant create user because password length < 6', done => {
       request(app)
       .post('/register')
       .send({email: "testing@mail.com", password: 'tes', username: 'admin' })
@@ -104,7 +106,7 @@ describe('Register User POST /register', () => {
     })
   }),
   describe('Register Error', () => {
-    test('cant create user coz username has been used', done => {
+    test('cant create user because username has been used', done => {
       request(app)
       .post('/register')
       .send({email: "tes@mail.com", password: '123456', username: 'tester' })
@@ -120,7 +122,7 @@ describe('Register User POST /register', () => {
     })
   }),
   describe('Register Error', () => {
-    test('cant create user coz email format incorrect', done => {
+    test('cant create user because email format incorrect', done => {
       request(app)
       .post('/register')
       .send({email: "tesmail.com", password: '123456', username: 'ogy' })
@@ -136,7 +138,7 @@ describe('Register User POST /register', () => {
     })
   }),
   describe('Register Error', () => {
-    test('cant create user coz email is empty', done => {
+    test('cant create user because email is empty', done => {
       request(app)
       .post('/register')
       .send({password: '123456', username: 'ogy1' })
@@ -152,7 +154,7 @@ describe('Register User POST /register', () => {
     })
   }),
   describe('Register Error', () => {
-    test('cant create user coz password is empty', done => {
+    test('cant create user because password is empty', done => {
       request(app)
       .post('/register')
       .send({email: "tes2@mail.com", username: 'ogy2' })
@@ -168,7 +170,7 @@ describe('Register User POST /register', () => {
     })
   }),
   describe('Register Error', () => {
-    test('cant create user coz username is empty', done => {
+    test('cant create user because username is empty', done => {
       request(app)
       .post('/register')
       .send({email: "tes2@mail.com", password: 123456})
@@ -196,12 +198,31 @@ describe('login User POST /login', () => {
         })
             .end((err, res) => {
                 const {body, status} = res
-                console.log(res.body, 'isi res test')
+                // console.log(res.body, 'isi res test')
                 if (err) {
                     return done(err)
                 }
+                accessToken = body.access_token
                 expect(status).toBe(200)
                 expect(body).toHaveProperty('access_token')
+                done()
+            })
+        })
+        test('decode access token', done => {
+            request(app)
+            .post('/login')
+            .send({
+                username: 'hiha77',
+                password: 'hihaha'
+        })
+            .end((err, res) => {
+                const {body, status} = res
+                // console.log(res.body, 'isi res test')
+                if (err) {
+                    return done(err)
+                }
+                let decodedToken = decodeToken(body.access_token, 'hiha')
+                expect(decodedToken).toHaveProperty('username', 'hiha77')
                 done()
             })
         })
@@ -243,7 +264,7 @@ describe('login User POST /login', () => {
             })
         }),
 
-        test('usernam cant be empty', done => {
+        test('username cant be empty', done => {
             request(app)
             .post('/login')
             .send({
@@ -279,4 +300,62 @@ describe('login User POST /login', () => {
             })
         })
     })
+})
+
+describe('Post Win', () => {
+  describe('Success Post Win', () => {
+    test('Response on Posting Win Match', done => {
+      request(app)
+      .post('/win')
+      .set({access_token: token})
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+        const {body, status} = res
+        expect(status).toBe(200)
+        expect(body).toHaveProperty('matchCount')
+        done()
+      })
+    })
+  })
+})
+
+describe('Post Lose', () => {
+  describe('Success Post Lose', () => {
+    test('Response on Posting Lose Match', done => {
+      request(app)
+      .post('/lose')
+      .set({access_token: token})
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+        const {body, status} = res
+        expect(status).toBe(200)
+        expect(body).toHaveProperty('matchCount')
+        done()
+      })
+    })
+  })
+})
+
+describe('Get Leaderboard', () => {
+  describe('Success Fetch Leaderboard', () => {
+    test('Response on get leaderboard', done => {
+      request(app)
+      .get('/leaderboard')
+      .end((err, res) => {
+        if (err) {
+          return done(err)
+        }
+        const {body, status} = res
+        // console.log(body, 'INI RESSSSSSSSS')
+        expect(status).toBe(200)
+        expect(body).toHaveLength(2)
+        expect(body[0]).toHaveProperty('winRate')
+        done()
+      })
+    })
+  })
 })
