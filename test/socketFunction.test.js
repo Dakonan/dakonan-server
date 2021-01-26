@@ -15,7 +15,7 @@ const initSocket = () => {
 
 		// define event handler for sucessfull connection
 		socket.on('connect', () => {
-			console.log('connected');
+			// console.log('connected');
 			resolve(socket);
 		});
 
