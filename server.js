@@ -9,9 +9,13 @@ const _ = require('lodash')
 let gameData = [];
 
 let rooms = []
+const users = {};
+const socketToRoom = {};
 
 io.on("connect", (socket) => {
   io.emit("greeting", "connect");
+  socket.emit("yourID", socket.id);
+
   socket.on("playerRegistration", function (payload) {
     gameData.push(payload)
   });
@@ -60,6 +64,40 @@ io.on("connect", (socket) => {
     })
   })
 
+  socket.on("leave-room", payload => {
+    socket.broadcast.emit("user-disconnected", socket.id);
+  })
+
+  socket.on("inRoom", ({roomName, idDelete}) => {
+    if (users[roomName]) {
+      const length = users[roomName].length;
+      if (length === 2) {
+        socket.emit("room full");
+        return;
+      }
+      users[roomName].push(socket.id);
+    } else {
+      users[roomName] = [socket.id];
+    }
+    socketToRoom[socket.id] = roomName;
+    const userInthisRoom = users[roomName].filter((userID) => userID !== idDelete);
+    socket.emit("all users", users[roomName]);
+  });
+
+  socket.on("sending signal", (payload) => {
+    io.to(payload.userToSignal).emit("user joined", {
+      signal: payload.signal,
+      callerID: payload.callerID,
+    });
+  });
+
+  socket.on("returning signal", (payload) => {
+    io.to(payload.callerID).emit("receiving returned signal", {
+      signal: payload.signal,
+      id: socket.id,
+    });
+  });
+
   socket.on('gameStart', (state, roomName) => {
     let roomIndex = rooms.findIndex((i) => i.name == roomName)
     rooms[roomIndex].gameState = _.cloneDeep(state)
@@ -80,7 +118,17 @@ io.on("connect", (socket) => {
     rooms[roomIndex].ready = []
     let roomDetail = rooms[roomIndex]
     io.sockets.in(roomName).emit("gameDetail", roomDetail)
-  })   
+  })
+
+  socket.on("disconnect", () => {
+    const roomName = socketToRoom[socket.id];
+    let room = users[roomName];
+    if (room) {
+      room = room.filter((id) => id !== socket.id);
+      users[roomName] = room;
+    }
+    socket.broadcast.emit("user-disconnected", socket.id);
+  });
 });
 
 server.listen(PORT, () => {
