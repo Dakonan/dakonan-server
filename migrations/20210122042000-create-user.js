@@ -23,10 +23,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       matchCount: {
-        type: Sequelize.FLOAT
+        type: Sequelize.INTEGER
       },
       winCount: {
-        type: Sequelize.FLOAT
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

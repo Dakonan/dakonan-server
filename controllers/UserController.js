@@ -60,8 +60,8 @@ class UserController {
       const winCount = user.dataValues.winCount
       // console.log('match:', matchCount, ' win:', winCount)
       const updateUser = {
-        matchCount: (matchCount+(0.5)),
-        winCount: (winCount+(0.5))
+        matchCount: (matchCount+(1)),
+        winCount: (winCount+(1))
       }
       const update = await User.update(updateUser, {
         where: {
@@ -88,7 +88,7 @@ class UserController {
       const matchCount = user.dataValues.matchCount
       // console.log('match:', matchCount, ' win:', winCount)
       const updateUser = {
-        matchCount: matchCount+0.5,
+        matchCount: matchCount+1,
       }
       const update = await User.update(updateUser, {
         where: {
