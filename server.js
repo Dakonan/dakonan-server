@@ -69,8 +69,9 @@ io.on("connect", (socket) => {
     })
   })
 
-  socket.on("leave-room", payload => {
-    socket.broadcast.emit("user-disconnected", socket.id);
+  socket.on("leave-room", () => {
+    // console.log("hello masuk disconnect")
+    socket.broadcast.emit("user-leave", socket.id);
   })
 
   socket.on("inRoom", ({roomName, idDelete}) => {
